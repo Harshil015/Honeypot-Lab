@@ -81,13 +81,18 @@ Access locally:
 http://127.0.0.1:8080
 
 🏗️ Architecture
+
 Attacker (Kali VM)
-        ↓
+    |
+    v
 Host Network
-        ↓
+    |
+    v
 Flask Honeypot (WSL/Linux)
-        ↓
+    |
+    v
 Logging & Analysis
+
 
 👨‍💻 Author
 
