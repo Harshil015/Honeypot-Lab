@@ -1,0 +1,222 @@
+2025-11-19 07:49:25,442 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-11-19 07:49:25,442 [33mPress CTRL+C to quit[0m
+2025-11-19 07:55:55,985 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-11-19 07:55:55,986 [33mPress CTRL+C to quit[0m
+2025-11-19 07:56:02,424 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-11-19 07:56:02,425 127.0.0.1 - - [19/Nov/2025 07:56:02] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-19 08:04:37,070 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-11-19 08:04:37,070 [33mPress CTRL+C to quit[0m
+2025-11-19 08:05:15,551 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-11-19 08:05:15,552 127.0.0.1 - - [19/Nov/2025 08:05:15] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-19 08:05:37,262 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=id
+2025-11-19 08:05:37,262 127.0.0.1 - - [19/Nov/2025 08:05:37] "GET /vulnerable?cmd=id HTTP/1.1" 200 -
+2025-11-19 12:43:07,701 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2025-11-19 12:43:07,703 [33mPress CTRL+C to quit[0m
+2025-11-19 12:43:29,927 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-11-19 12:43:29,935 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-11-19 12:43:29,936 127.0.0.1 - - [19/Nov/2025 12:43:29] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-19 12:43:54,823 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-11-19 12:43:54,827 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-11-19 12:43:54,828 127.0.0.1 - - [19/Nov/2025 12:43:54] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-19 12:43:54,840 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=id
+2025-11-19 12:43:54,849 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=uid=1000(jojo) gid=1000(jojo) groups=1000(jojo),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),117(netdev) stderr=
+2025-11-19 12:43:54,849 127.0.0.1 - - [19/Nov/2025 12:43:54] "GET /vulnerable?cmd=id HTTP/1.1" 200 -
+2025-11-19 12:44:04,782 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=ls -la
+2025-11-19 12:44:04,790 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=total 24
+drwxr-xr-x 3 jojo jojo 4096 Nov 19 12:42 .
+drwxr-x--- 5 jojo jojo 4096 Nov 19 07:48 ..
+-rw-r--r-- 1 jojo jojo 2313 Nov 19 12:42 app.py
+-rw-r--r-- 1 jojo jojo 2724 Nov 19 12:44 honeypot.log
+-rw-r--r-- 1 jojo jojo 1921 Nov 19 07:57 monitor_honeypot.py
+drwxr-xr-x 5 jojo jojo 4096 Nov 19 07:47 venv stderr=
+2025-11-19 12:44:04,791 127.0.0.1 - - [19/Nov/2025 12:44:04] "GET /vulnerable?cmd=ls%20-la HTTP/1.1" 200 -
+2025-11-19 12:44:08,010 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=cat /etc/os-release
+2025-11-19 12:44:08,015 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.5 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy stderr=
+2025-11-19 12:44:08,016 127.0.0.1 - - [19/Nov/2025 12:44:08] "GET /vulnerable?cmd=cat%20/etc/os-release HTTP/1.1" 200 -
+2025-11-19 12:45:56,609 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-11-19 12:45:56,614 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-11-19 12:45:56,615 127.0.0.1 - - [19/Nov/2025 12:45:56] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-19 12:45:56,627 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=id
+2025-11-19 12:45:56,632 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=uid=1000(jojo) gid=1000(jojo) groups=1000(jojo),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),117(netdev) stderr=
+2025-11-19 12:45:56,633 127.0.0.1 - - [19/Nov/2025 12:45:56] "GET /vulnerable?cmd=id HTTP/1.1" 200 -
+2025-11-19 12:45:56,645 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=ls -la
+2025-11-19 12:45:56,651 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=total 28
+drwxr-xr-x 3 jojo jojo 4096 Nov 19 12:42 .
+drwxr-x--- 5 jojo jojo 4096 Nov 19 07:48 ..
+-rw-r--r-- 1 jojo jojo 2313 Nov 19 12:42 app.py
+-rw-r--r-- 1 jojo jojo 4599 Nov 19 12:45 honeypot.log
+-rw-r--r-- 1 jojo jojo 1921 Nov 19 07:57 monitor_honeypot.py
+drwxr-xr-x 5 jojo jojo 4096 Nov 19 07:47 venv stderr=
+2025-11-19 12:45:56,652 127.0.0.1 - - [19/Nov/2025 12:45:56] "GET /vulnerable?cmd=ls%20-la HTTP/1.1" 200 -
+2025-11-19 12:45:56,667 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=cat /etc/os-release
+2025-11-19 12:45:56,671 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=PRETTY_NAME="Ubuntu 22.04.5 LTS"
+NAME="Ubuntu"
+VERSION_ID="22.04"
+VERSION="22.04.5 LTS (Jammy Jellyfish)"
+VERSION_CODENAME=jammy
+ID=ubuntu
+ID_LIKE=debian
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+UBUNTU_CODENAME=jammy stderr=
+2025-11-19 12:45:56,672 127.0.0.1 - - [19/Nov/2025 12:45:56] "GET /vulnerable?cmd=cat%20/etc/os-release HTTP/1.1" 200 -
+2025-11-29 16:44:22,635 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2025-11-29 16:44:22,636 [33mPress CTRL+C to quit[0m
+2025-11-29 16:45:10,849 HTTP_CMD src=127.0.0.1 ua=Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.7019 cmd=whoami
+2025-11-29 16:45:10,868 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-11-29 16:45:10,869 127.0.0.1 - - [29/Nov/2025 16:45:10] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-11-29 16:53:34,215 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-11-29 16:53:34,216 [33mPress CTRL+C to quit[0m
+2025-12-02 11:25:46,204 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-02 11:25:46,204 [33mPress CTRL+C to quit[0m
+2025-12-02 11:28:14,984 HTTP_CMD src=127.0.0.1 ua=curl/8.16.0 cmd=whoami
+2025-12-02 11:28:14,991 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-12-02 11:28:14,992 127.0.0.1 - - [02/Dec/2025 11:28:14] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-02 11:31:45,624 HTTP_CMD src=127.0.0.1 ua=curl/7.81.0 cmd=whoami
+2025-12-02 11:31:45,626 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-12-02 11:31:45,626 127.0.0.1 - - [02/Dec/2025 11:31:45] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-02 11:32:07,049 HTTP_CMD src=127.0.0.1 ua=curl/8.16.0 cmd=whoami
+2025-12-02 11:32:07,051 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-12-02 11:32:07,051 127.0.0.1 - - [02/Dec/2025 11:32:07] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:20:17,105 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:20:17,106 [33mPress CTRL+C to quit[0m
+2025-12-03 18:25:20,705 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:25:20,705 [33mPress CTRL+C to quit[0m
+2025-12-03 18:29:01,441 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:29:01,441 [33mPress CTRL+C to quit[0m
+2025-12-03 18:30:55,657 HTTP_CMD src=127.0.0.1 ua=Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.7309 cmd=whoami
+2025-12-03 18:30:55,667 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-12-03 18:30:55,669 127.0.0.1 - - [03/Dec/2025 18:30:55] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:36:37,486 HTTP_CMD src=127.0.0.1 ua=Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.7309 cmd=whoami
+2025-12-03 18:36:37,488 HTTP_CMD_RESULT src=127.0.0.1 rc=0 stdout=jojo stderr=
+2025-12-03 18:36:37,489 127.0.0.1 - - [03/Dec/2025 18:36:37] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:36:51,333 HTTP_CMD src=172.25.32.1 ua=Mozilla/5.0 (Windows NT; Windows NT 10.0; en-IN) WindowsPowerShell/5.1.26100.7309 cmd=whoami
+2025-12-03 18:36:51,336 HTTP_CMD_RESULT src=172.25.32.1 rc=0 stdout=jojo stderr=
+2025-12-03 18:36:51,336 172.25.32.1 - - [03/Dec/2025 18:36:51] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:38:22,214 HTTP_CMD src=172.25.32.1 ua=curl/8.17.0 cmd=whoami
+2025-12-03 18:38:22,216 HTTP_CMD_RESULT src=172.25.32.1 rc=0 stdout=jojo stderr=
+2025-12-03 18:38:22,217 172.25.32.1 - - [03/Dec/2025 18:38:22] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:39:27,947 HTTP_CMD src=172.25.32.1 ua=curl/8.17.0 cmd=whoami
+2025-12-03 18:39:27,950 HTTP_CMD_RESULT src=172.25.32.1 rc=0 stdout=jojo stderr=
+2025-12-03 18:39:27,950 172.25.32.1 - - [03/Dec/2025 18:39:27] "GET /vulnerable?cmd=whoami HTTP/1.1" 200 -
+2025-12-03 18:40:11,766 HTTP_CMD src=172.25.32.1 ua=curl/8.17.0 cmd=cat /etc/passwd
+2025-12-03 18:40:11,772 HTTP_CMD_RESULT src=172.25.32.1 rc=0 stdout=root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:102:105::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:103:106:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+syslog:x:104:111::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+uuidd:x:106:112::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:107:113::/nonexistent:/usr/sbin/nologin
+landscape:x:108:115::/var/lib/landscape:/usr/sbin/nologin
+jojo:x:1000:1000:,,,:/home/jojo:/bin/bash stderr=
+2025-12-03 18:40:11,773 172.25.32.1 - - [03/Dec/2025 18:40:11] "GET /vulnerable?cmd=cat%20/etc/passwd HTTP/1.1" 200 -
+2025-12-03 18:40:37,213 HTTP_CMD src=172.25.32.1 ua=curl/8.17.0 cmd=whoami;id;uname -a
+2025-12-03 18:40:37,221 HTTP_CMD_RESULT src=172.25.32.1 rc=0 stdout=jojo
+uid=1000(jojo) gid=1000(jojo) groups=1000(jojo),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),117(netdev)
+Linux LAPTOP-HARSHIL 6.6.87.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux stderr=
+2025-12-03 18:40:37,221 172.25.32.1 - - [03/Dec/2025 18:40:37] "GET /vulnerable?cmd=whoami;id;uname%20-a HTTP/1.1" 200 -
+2025-12-03 18:45:19,096 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:45:19,096 [33mPress CTRL+C to quit[0m
+2025-12-03 18:45:23,536 172.25.32.1 - - [03/Dec/2025 18:45:23] "GET /login HTTP/1.1" 200 -
+2025-12-03 18:45:35,465 LOGIN_ATTEMPT src=172.25.32.1 ua=curl/8.17.0 user=admin pass=1234
+2025-12-03 18:45:35,465 172.25.32.1 - - [03/Dec/2025 18:45:35] "[31m[1mPOST /login HTTP/1.1[0m" 401 -
+2025-12-03 18:48:37,329 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:48:37,329 [33mPress CTRL+C to quit[0m
+2025-12-03 18:48:41,965 UPLOAD src=172.25.32.1 ua=curl/8.17.0 filename=sample.txt size=5
+2025-12-03 18:48:41,965 172.25.32.1 - - [03/Dec/2025 18:48:41] "POST /upload HTTP/1.1" 200 -
+2025-12-03 18:50:09,308 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 18:50:09,309 [33mPress CTRL+C to quit[0m
+2025-12-03 18:50:15,203 ADMIN_API_ATTEMPT src=172.25.32.1 ua=curl/8.17.0 body={"cmd":"reset_password"}
+2025-12-03 18:50:15,204 172.25.32.1 - - [03/Dec/2025 18:50:15] "[31m[1mPOST /api/admin HTTP/1.1[0m" 403 -
+2025-12-03 19:34:57,785 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 19:34:57,785 [33mPress CTRL+C to quit[0m
+2025-12-03 19:35:32,550 WEBSHELL_GET src=172.25.32.1 ua=curl/8.17.0 path=/shell
+2025-12-03 19:35:32,551 172.25.32.1 - - [03/Dec/2025 19:35:32] "GET /shell HTTP/1.1" 200 -
+2025-12-03 19:35:55,711 WEBSHELL_POST src=172.25.32.1 ua=curl/8.17.0 path=/shell payload=
+2025-12-03 19:35:55,711 172.25.32.1 - - [03/Dec/2025 19:35:55] "POST /shell HTTP/1.1" 200 -
+2025-12-03 19:36:30,751 WEBSHELL_UPLOAD src=172.25.32.1 ua=curl/8.17.0 path=/shell.php filename=test.php size=31
+2025-12-03 19:36:30,751 172.25.32.1 - - [03/Dec/2025 19:36:30] "POST /shell.php HTTP/1.1" 200 -
+2025-12-03 19:44:02,074 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 19:44:02,074 [33mPress CTRL+C to quit[0m
+2025-12-03 19:44:57,501 PHPMYADMIN_BAIT src=172.25.32.1 ua=curl/8.17.0 payload=
+2025-12-03 19:44:57,501 172.25.32.1 - - [03/Dec/2025 19:44:57] "[31m[1mGET /phpmyadmin/ HTTP/1.1[0m" 403 -
+2025-12-03 19:45:06,891 TOMCAT_MGR_BAIT src=172.25.32.1 ua=curl/8.17.0 body=
+2025-12-03 19:45:06,891 172.25.32.1 - - [03/Dec/2025 19:45:06] "[31m[1mGET /manager/html HTTP/1.1[0m" 401 -
+2025-12-03 19:47:30,668 [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://172.25.42.186:8080
+2025-12-03 19:47:30,668 [33mPress CTRL+C to quit[0m
