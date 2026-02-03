@@ -91,9 +91,6 @@ Secure Lab Deployment
     
     python app.py
 
-Access locally:
-    http://127.0.0.1:8080
-
 
 👨‍💻 Author
 
