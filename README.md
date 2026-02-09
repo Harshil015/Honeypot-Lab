@@ -1,4 +1,4 @@
-## Honeypot Lab
+# Honeypot Lab
 ---
 
 Red • Blue • Purple Team Cybersecurity Project
