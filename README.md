@@ -104,9 +104,7 @@ Secure Lab Deployment
 
 Harshil Makwana
 
-Cybersecurity Enthusiast
-
-Red • Blue • Purple Team Learner
+Cybersecurity Enthusiast | Red • Blue • Purple Team Learner
 
 ---
 
