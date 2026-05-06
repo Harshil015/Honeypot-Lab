@@ -40,10 +40,13 @@ E. Understand MITRE ATT&CK techniques in practice
 🟦 Defensive Visibility
 
 1. Full request logging
-2. IP & User-Agent capture
-3. Command execution logging
-4. File upload tracking
-5. Brute-force detection patterns
+2. Structured JSON-lines event logging
+3. SQLite event persistence
+4. GeoIP enrichment for country, city, ISP, and ASN
+5. IP & User-Agent capture
+6. Command execution logging
+7. File upload tracking
+8. Brute-force detection patterns
 
 🟪 Purple Team Workflow
 
@@ -57,7 +60,7 @@ E. Understand MITRE ATT&CK techniques in practice
 
 | Category            | Tools         |
 | ------------------- | ------------- |
-| Backend             | Python, Flask |
+| Backend             | Python, Flask, SQLite |
 | Environment         | Linux / WSL   |
 | Attacker Simulation | Kali Linux    |
 | Virtualization      | VirtualBox    |
@@ -95,8 +98,33 @@ Secure Lab Deployment
     python3 -m venv venv
     source venv/bin/activate
     pip install -r requirements.txt
-    
+
+    # Optional: execute captured commands in the lab VM. Default is capture-only.
+    export HONEYPOT_ENABLE_RCE_EXECUTION=false
     python app.py
+
+---
+
+# ⚙️ Configuration
+
+The application reads toggle-able settings from environment variables in `config.py`:
+
+| Variable | Default | Purpose |
+| -------- | ------- | ------- |
+| `HONEYPOT_ENABLE_RCE_EXECUTION` | `false` | Enables real command execution on `/vulnerable` for isolated lab use only. |
+| `HONEYPOT_UPLOAD_DIR` | `uploads/` | Directory for captured uploaded files and webshell bait uploads. |
+| `HONEYPOT_LOG_LEVEL` | `INFO` | Logging threshold for structured JSON events. |
+| `HONEYPOT_LOG_FILE` | `honeypot.log` | JSON-lines event log destination. |
+| `HONEYPOT_DATABASE_PATH` | `db/events.db` | SQLite database path for persisted events. |
+| `HONEYPOT_GEOIP_ENABLED` | `true` | Enables ip-api.com GeoIP enrichment for public source IPs. |
+
+# 🧾 Event Storage
+
+Each incoming request is GeoIP-enriched before routing. Every captured event is written as structured JSON to `honeypot.log` and persisted in SQLite at `db/events.db`. The local SQLite `events` table stores the event type, severity, source IP, User-Agent, payload, timestamp, GeoIP country/city/ISP/ASN metadata, and MITRE ATT&CK technique information.
+
+Run the live monitor to tail structured events:
+
+    python monitor_honeypot.py
 
 ---
 

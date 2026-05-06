@@ -1,74 +1,74 @@
+"""Simple live JSON event viewer for honeypot.log."""
 
-# monitor_honeypot.py - simple live log viewer for honeypot.log
-import time
+from __future__ import annotations
+
+import json
 import os
-import re
+import time
 
-try:
-    from tabulate import tabulate
-    USE_TABULATE = True
-except ImportError:
-    USE_TABULATE = False
+from tabulate import tabulate
+
 
 LOGFILE = os.path.join(os.path.dirname(__file__), "honeypot.log")
 
-PATTERN = re.compile(
-    r"HTTP_CMD src=(?P<src>\S+) ua=(?P<ua>.+?) cmd=(?P<cmd>.*)$"
-)
 
 def follow(filename):
-    """
-    Generator that yields new lines as they are written to the file.
-    Similar to 'tail -f'.
-    """
-    with open(filename, "r") as f:
-        # Go to end of file
-        f.seek(0, os.SEEK_END)
+    """Yield new lines as they are written, similar to tail -f."""
+    with open(filename, "r", encoding="utf-8") as log_file:
+        log_file.seek(0, os.SEEK_END)
         while True:
-            line = f.readline()
+            line = log_file.readline()
             if not line:
                 time.sleep(0.5)
                 continue
             yield line.rstrip("\n")
 
+
 def parse_line(line):
-    """
-    Extract src IP, user-agent, and cmd from a log line.
-    If it doesn't match our pattern, return raw.
-    """
-    m = PATTERN.search(line)
-    if not m:
+    """Parse a JSON-lines event, preserving raw text if parsing fails."""
+    try:
+        event = json.loads(line)
+    except json.JSONDecodeError:
         return {"raw": line}
 
-    return {
-        "src": m.group("src"),
-        "ua": m.group("ua"),
-        "cmd": m.group("cmd"),
-        "raw": line
-    }
+    if not isinstance(event, dict):
+        return {"raw": line}
+    event["raw"] = line
+    return event
+
 
 def display_entry(entry):
-    if "src" in entry:
-        if USE_TABULATE:
-            table = [[entry["src"], entry["ua"], entry["cmd"]]]
-            print(tabulate(table, headers=["Source IP", "User-Agent", "Command"], tablefmt="grid"))
-        else:
-            print(f"[SRC] {entry['src']}")
-            print(f"[UA ] {entry['ua']}")
-            print(f"[CMD] {entry['cmd']}")
-            print("-" * 60)
-    else:
+    if "event_type" not in entry:
         print(entry["raw"])
+        return
+
+    row = [
+        entry.get("timestamp", ""),
+        entry.get("severity", ""),
+        entry.get("event_type", ""),
+        entry.get("src_ip", ""),
+        entry.get("country") or "",
+        entry.get("mitre_technique_id") or "",
+        entry.get("payload") or "",
+    ]
+    print(
+        tabulate(
+            [row],
+            headers=["Timestamp", "Severity", "Event", "Source IP", "Country", "MITRE", "Payload"],
+            tablefmt="grid",
+        )
+    )
+
 
 def main():
     if not os.path.exists(LOGFILE):
         print(f"{LOGFILE} does not exist yet. Start app.py first or send some requests.")
-        open(LOGFILE, "a").close()
+        open(LOGFILE, "a", encoding="utf-8").close()
 
-    print(f"[*] Monitoring {LOGFILE} for new events...")
+    print(f"[*] Monitoring {LOGFILE} for new structured events...")
     for line in follow(LOGFILE):
-        entry = parse_line(line)
-        display_entry(entry)
+        display_entry(parse_line(line))
+
 
 if __name__ == "__main__":
     main()
