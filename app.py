@@ -1,25 +1,21 @@
 """Flask application factory for the Honeypot Lab."""
 
 from __future__ import annotations
-
 import logging
 import os
 from pathlib import Path
-
 from flask import Flask, g
-
 from blueprints.bait import bait_bp
 from blueprints.login import login_bp
 from blueprints.rce import rce_bp
 from blueprints.upload import upload_bp
+from blueprints.jndi import jndi_bp
 from config import Config
 from extensions import close_db_connection, init_database
 from services.event_logger import JSONEventFormatter, get_client_ip
 from services.geoip import enrich_ip
 
-
 def configure_logging(app: Flask) -> None:
-    """Configure JSON-lines logging for structured honeypot telemetry."""
     log_file = Path(app.config["LOG_FILE"])
     log_file.parent.mkdir(parents=True, exist_ok=True)
     log_file.touch(exist_ok=True)
@@ -30,7 +26,7 @@ def configure_logging(app: Flask) -> None:
     logger.handlers.clear()
 
     formatter = JSONEventFormatter()
-    file_handler = logging.FileHandler(log_file)
+    file_handler = logging.FileHandler(log_file, encoding='utf-8')
     file_handler.setFormatter(formatter)
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)
@@ -38,11 +34,16 @@ def configure_logging(app: Flask) -> None:
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
 
-
 def create_app(config_class: type[Config] = Config) -> Flask:
-    """Build and configure the Flask honeypot application."""
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Register blueprints to app context for DB access
+    bait_bp.app = app
+    login_bp.app = app
+    rce_bp.app = app
+    upload_bp.app = app
+    jndi_bp.app = app
 
     Path(app.config["DB_DIR"]).mkdir(parents=True, exist_ok=True)
     os.makedirs(app.config["UPLOAD_DIR"], exist_ok=True)
@@ -59,12 +60,12 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(rce_bp)
     app.register_blueprint(login_bp)
     app.register_blueprint(upload_bp)
+    app.register_blueprint(jndi_bp)
 
     return app
 
-
 app = create_app()
 
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=False)
+    # Port aligned with README
+    app.run(host="0.0.0.0", port=5000, debug=False)
