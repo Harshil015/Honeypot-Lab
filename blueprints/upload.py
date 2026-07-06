@@ -1,44 +1,36 @@
-"""File upload honeypot blueprint."""
+"""File upload capture."""
 
-from __future__ import annotations
-
-import os
-
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, request, g
+from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
-
-from services.event_logger import get_client_ip, get_user_agent, log_event
-
+from extensions import save_event
+from services.event_logger import log_event, get_client_ip
+import logging
+import os
 
 upload_bp = Blueprint("upload", __name__)
 
-
 @upload_bp.route("/upload", methods=["POST"])
-def fake_upload():
+def upload_file():
+    app = upload_bp.app
     if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    uploaded_file = request.files["file"]
-    original_filename = uploaded_file.filename or "unknown"
-    safe_filename = secure_filename(original_filename) or "uploaded.bin"
-    upload_dir = current_app.config["UPLOAD_DIR"]
-    os.makedirs(upload_dir, exist_ok=True)
-
-    file_path = os.path.join(upload_dir, safe_filename)
-    uploaded_file.save(file_path)
-    file_size = os.path.getsize(file_path)
-
-    log_event(
-        "FILE_UPLOAD",
-        severity="HIGH",
-        payload=original_filename,
-        src_ip=get_client_ip(),
-        user_agent=get_user_agent(),
-        details={
-            "filename": original_filename,
-            "stored_filename": safe_filename,
-            "size": file_size,
-        },
-    )
-
-    return jsonify({"status": "uploaded", "filename": safe_filename, "size": file_size})
+        return "No file provided", 400
+    
+    file = request.files["file"]
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(app.config["UPLOAD_DIR"], filename)
+    
+    # Save file for analysis (safe, never executed)
+    file.save(filepath)
+    
+    logger = logging.getLogger("honeypot.events")
+    log_event(logger, "WEBSHELL_UPLOAD", "HIGH", "T1505.003", "Persistence", payload=filename)
+    
+    save_event({
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "event_type": "WEBSHELL_UPLOAD", "severity": "HIGH", "src_ip": get_client_ip(),
+        "user_agent": request.headers.get("User-Agent", ""), "payload": filename, "path": request.path,
+        "method": request.method, **g.geoip, "mitre_technique_id": "T1505.003", "mitre_tactic": "Persistence", "details": {"saved_to": filepath}
+    })
+    
+    return "File uploaded successfully", 200
