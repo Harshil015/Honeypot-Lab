@@ -1,52 +1,42 @@
-"""GeoIP enrichment using ip-api.com."""
+"""Cached GeoIP enrichment."""
 
-from __future__ import annotations
-
-import ipaddress
-import json
-from functools import lru_cache
-from urllib.error import HTTPError, URLError
-from urllib.request import urlopen
-
+import time
+import requests
 from flask import current_app
 
+GEOIP_CACHE = {}
+GEOIP_TTL = 3600  # 1 hour cache
 
-_EMPTY_GEO = {"country": None, "city": None, "isp": None, "asn": None}
+def enrich_ip(ip: str) -> dict:
+    """Return cached GeoIP data or fetch from API."""
+    if ip == "127.0.0.1" or ip == "0.0.0.0":
+        return {"country": "LOCAL", "city": "LOCAL", "isp": "LOCAL", "asn": "LOCAL"}
 
+    current_time = time.time()
+    if ip in GEOIP_CACHE:
+        cached_time, cached_data = GEOIP_CACHE[ip]
+        if current_time - cached_time < GEOIP_TTL:
+            return cached_data
 
-def _is_public_ip(ip_address: str) -> bool:
-    try:
-        parsed = ipaddress.ip_address(ip_address)
-    except ValueError:
-        return False
-    return parsed.is_global
-
-
-@lru_cache(maxsize=2048)
-def _lookup_geoip_cached(ip_address: str, endpoint: str, timeout: float) -> dict:
-    url = endpoint.format(ip=ip_address)
-    with urlopen(url, timeout=timeout) as response:
-        data = json.loads(response.read().decode("utf-8"))
-    if data.get("status") != "success":
-        return dict(_EMPTY_GEO)
-    return {
-        "country": data.get("country"),
-        "city": data.get("city"),
-        "isp": data.get("isp"),
-        "asn": data.get("as"),
-    }
-
-
-def enrich_ip(ip_address: str) -> dict:
-    """Return GeoIP metadata for a public IP, or empty fields on failure."""
-    if not current_app.config.get("GEOIP_ENABLED", True) or not _is_public_ip(ip_address):
-        return dict(_EMPTY_GEO)
+    if not current_app.config["GEOIP_ENABLED"]:
+        return {"country": "Unknown", "city": "Unknown", "isp": "Unknown", "asn": "Unknown"}
 
     try:
-        return _lookup_geoip_cached(
-            ip_address,
-            current_app.config["GEOIP_ENDPOINT"],
-            current_app.config["GEOIP_TIMEOUT_SECONDS"],
-        )
-    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError):
-        return dict(_EMPTY_GEO)
+        endpoint = current_app.config["GEOIP_ENDPOINT"].format(ip=ip)
+        resp = requests.get(endpoint, timeout=current_app.config["GEOIP_TIMEOUT_SECONDS"])
+        if resp.status_code == 200:
+            data = resp.json()
+            enriched = {
+                "country": data.get("countryCode", "Unknown"),
+                "city": data.get("city", "Unknown"),
+                "isp": data.get("isp", "Unknown"),
+                "asn": data.get("as", "Unknown")
+            }
+            GEOIP_CACHE[ip] = (current_time, enriched)
+            return enriched
+    except Exception:
+        pass
+    
+    fallback = {"country": "Unknown", "city": "Unknown", "isp": "Unknown", "asn": "Unknown"}
+    GEOIP_CACHE[ip] = (current_time, fallback)
+    return fallback
