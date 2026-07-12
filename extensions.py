@@ -7,16 +7,16 @@ from pathlib import Path
 from typing import Any
 from flask import current_app, g
 
+# Added 'node_id' for multi-node tracking
 EVENT_COLUMNS = (
-    "timestamp", "event_type", "severity", "src_ip", "user_agent", "payload",
+    "timestamp", "node_id", "event_type", "severity", "src_ip", "user_agent", "payload",
     "path", "method", "country", "city", "isp", "asn",
     "mitre_technique_id", "mitre_tactic", "details"
 )
 
 def get_db_connection() -> sqlite3.Connection:
     if "db_connection" not in g:
-        db_path = current_app.config["DATABASE_PATH"]
-        g.db_connection = sqlite3.connect(db_path)
+        g.db_connection = sqlite3.connect(current_app.config["DATABASE_PATH"])
         g.db_connection.row_factory = sqlite3.Row
     return g.db_connection
 
@@ -34,16 +34,14 @@ def init_database(app) -> None:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                timestamp TEXT NOT NULL, event_type TEXT NOT NULL, severity TEXT NOT NULL,
+                timestamp TEXT NOT NULL, node_id TEXT, event_type TEXT NOT NULL, severity TEXT NOT NULL,
                 src_ip TEXT NOT NULL, user_agent TEXT, payload TEXT, path TEXT, method TEXT,
                 country TEXT, city TEXT, isp TEXT, asn TEXT,
                 mitre_technique_id TEXT, mitre_tactic TEXT, details TEXT
             )
         """)
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_events_node ON events(node_id)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_events_timestamp ON events(timestamp)")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_events_type ON events(event_type)")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_events_ip ON events(src_ip)")
-        conn.execute("CREATE INDEX IF NOT EXISTS idx_events_severity ON events(severity)")
 
 def save_event(event: dict[str, Any]) -> None:
     row = dict(event)
