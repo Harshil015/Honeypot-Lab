@@ -17,6 +17,12 @@ Over 500 interactions across four attack vectors in the first deployment window:
 
 ---
 
+## Why I built this
+
+Reading about attacker behavior and watching it happen are different things. I wanted real interaction data rather than synthetic examples — a way to check whether the standard attack narratives (Log4Shell is old news, brute-force is noisy and random, RCE takes attackers time to find) actually hold up against what shows up when a vulnerable service goes live for real.
+
+---
+
 ## What the data showed
 
 **Bots don't wait.** RCE probes started within minutes of the service going live.
