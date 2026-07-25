@@ -16,8 +16,15 @@ def load_data() -> pd.DataFrame:
     records = []
     with open(LOGFILE, "r", encoding="utf-8") as f:
         for line in f:
-            try: records.append(json.loads(line))
-            except: continue
+            try: 
+                records.append(json.loads(line))
+            except json.JSONDecodeError:
+                # Skip malformed JSON lines
+                continue
+            except Exception as e:
+                # Log other unexpected errors for debugging
+                print(f"[!] Warning: Unexpected error parsing log line: {e}")
+                continue
     df = pd.DataFrame(records)
     if not df.empty and 'timestamp' in df:
         df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
