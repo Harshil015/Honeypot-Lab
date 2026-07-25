@@ -34,7 +34,18 @@ def enrich_ip(ip: str) -> dict:
             }
             GEOIP_CACHE[ip] = (current_time, enriched)
             return enriched
-    except Exception:
+    except requests.Timeout:
+        # GeoIP API timeout - use fallback
+        pass
+    except requests.ConnectionError:
+        # GeoIP API unreachable - use fallback
+        pass
+    except (KeyError, ValueError):
+        # Configuration error or JSON parse error - use fallback
+        pass
+    except Exception as e:
+        # Unexpected error - log and use fallback
+        print(f"[!] Unexpected error in GeoIP enrichment for {ip}: {e}")
         pass
     
     fallback = {"country": "Unknown", "city": "Unknown", "isp": "Unknown", "asn": "Unknown"}
