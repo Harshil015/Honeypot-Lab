@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 import os
 from pathlib import Path
-from flask import Flask, g
+from flask import Flask
 from blueprints.bait import bait_bp
 from blueprints.login import login_bp
 from blueprints.rce import rce_bp
@@ -12,8 +12,8 @@ from blueprints.upload import upload_bp
 from blueprints.jndi import jndi_bp
 from config import Config
 from extensions import close_db_connection, init_database
-from services.event_logger import JSONEventFormatter, get_client_ip
-from services.geoip import enrich_ip
+from services.event_logger import JSONEventFormatter
+
 
 def configure_logging(app: Flask) -> None:
     log_file = Path(app.config["LOG_FILE"])
@@ -34,6 +34,7 @@ def configure_logging(app: Flask) -> None:
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
 
+
 def create_app(config_class: type[Config] = Config) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -52,9 +53,13 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     init_database(app)
     app.teardown_appcontext(close_db_connection)
 
-    @app.before_request
-    def enrich_request_geoip() -> None:
-        g.geoip = enrich_ip(get_client_ip())
+    # issue E1: GeoIP enrichment used to run here as a before_request hook,
+    # synchronously calling an external API on every single request before
+    # the view function ran - meaning the attacker's response was blocked
+    # for up to GEOIP_TIMEOUT_SECONDS on every hit. Captured events now
+    # carry a "Pending" geoip placeholder (see services/event_logger.py),
+    # and monitor_honeypot.py enriches them offline, once per unique IP,
+    # during analysis (see services/geoip.py).
 
     app.register_blueprint(bait_bp)
     app.register_blueprint(rce_bp)
@@ -63,6 +68,7 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(jndi_bp)
 
     return app
+
 
 app = create_app()
 
