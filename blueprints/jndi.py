@@ -9,11 +9,6 @@ jndi_bp = Blueprint("jndi", __name__)
 
 @jndi_bp.route("/jndi", methods=["GET", "POST"])
 def jndi_lookup():
-    # issue B1: request.headers.get("User-Agent") returns None when the
-    # header is absent (curl -A "", many scanners) rather than "" -- the
-    # old `None + " " + ...` string concatenation raised a TypeError
-    # before the event was ever logged, silently dropping exactly the
-    # kind of request most likely to be an automated attack tool.
     user_agent = request.headers.get("User-Agent") or ""
     payload = f"{user_agent} {request.args.get('payload', '')}".strip()
 
