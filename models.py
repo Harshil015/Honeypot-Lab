@@ -1,5 +1,4 @@
-"""Schema documentation for the SQLite-backed event store.
-"""
+"""Schema documentation for the SQLite-backed event store."""
 
 from extensions import EVENT_COLUMNS
 
