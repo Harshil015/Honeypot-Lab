@@ -16,7 +16,4 @@ def send_siem_alert(event: dict):
         # Send as JSON payload, standard for Splunk HEC, Discord, Slack, etc.
         requests.post(webhook_url, json=event, timeout=2.0)
     except Exception as e:
-        # Don't crash the honeypot if the SIEM is down or the webhook URL
-        # is bad, but don't fail totally silently either -- issue E6, this
-        # used to be a bare `except: pass` with zero visibility.
         logger.warning("SIEM alert delivery failed: %s", e)
