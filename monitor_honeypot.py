@@ -14,14 +14,7 @@ LOGFILE = os.path.join(os.path.dirname(__file__), "honeypot.log")
 
 
 def load_data_from_db() -> pd.DataFrame:
-    """Load events from the SQLite store.
-
-    issue D1: events.db was write-only -- save_event() wrote to it on
-    every request, but nothing in the codebase ever read it back. This is
-    now the preferred source (WAL mode + indices make it the schema's
-    evident intent as the real analytics store); load_data() falls back
-    to honeypot.log if it's empty or missing.
-    """
+    """Load events from the SQLite store."""
     db_path = Config.DATABASE_PATH
     if not os.path.exists(db_path):
         return pd.DataFrame()
@@ -83,14 +76,7 @@ def load_data() -> pd.DataFrame:
 
 def enrich_geoip_offline(df: pd.DataFrame) -> pd.DataFrame:
     """GeoIP-enrich the loaded events, once per unique src_ip, entirely
-    offline / after capture.
-
-    issue E1: this used to run synchronously on every single live request
-    (blocking the attacker's response for up to GEOIP_TIMEOUT_SECONDS).
-    Captured events now carry "Pending" placeholders; this is where they
-    actually get filled in, deduplicated by IP so N events from the same
-    attacker cost one lookup rather than N.
-    """
+    offline / after capture."""
     if df.empty or "src_ip" not in df or "country" not in df:
         return df
     pending_mask = df["country"] == "Pending"
@@ -133,20 +119,10 @@ def generate_charts(df: pd.DataFrame):
 
 
 def generate_payload_frequency_chart(df: pd.DataFrame):
-    """issue C1: User_Manual.md documented this chart, but the function
-    generating it never existed -- running the documented command produced
-    attack_timeline.png and silently skipped payload_frequency.png with no
-    error.
-    """
     if df.empty or "payload" not in df:
         return
     payloads = df["payload"].fillna("").astype(str).replace("", "(empty)")
     truncated = payloads.apply(lambda p: p if len(p) <= 40 else p[:37] + "...")
-    # Matplotlib treats an unescaped '$' as the start of a mathtext
-    # expression. Real payloads here often contain one (e.g. Log4Shell's
-    # ${jndi:...}), and truncation can cut it off before a closing '$',
-    # leaving unbalanced mathtext that crashes the chart - escape it so
-    # '$' always renders as a literal character in the tick labels.
     truncated = truncated.str.replace("$", "\\$", regex=False)
     top_payloads = truncated.value_counts().head(15)
     if top_payloads.empty:
@@ -163,14 +139,6 @@ def generate_payload_frequency_chart(df: pd.DataFrame):
 
 
 def _escape_yara_string(payload: str, max_len: int = 100) -> str:
-    """Escape a payload for safe embedding in a YARA double-quoted string
-    (issue D9). The raw payload is truncated to max_len *before* escaping,
-    not after: escaping can only grow a string (never shrinks it), so
-    truncating first guarantees the escape sequences that result are never
-    cut in half. Truncating after escaping instead risks leaving a
-    dangling, unescaped backslash at the cut point, which would corrupt
-    the generated rule's syntax.
-    """
     truncated = payload[:max_len]
     escaped = truncated.replace('\\', '\\\\').replace('"', '\\"')
     # A YARA string literal must be a single line - strip/space out any
@@ -191,8 +159,6 @@ def generate_yara_rules(df: pd.DataFrame):
         if len(payload) <= 10:  # Only generate rules for substantial payloads
             continue
         if payload in seen_payloads:
-            # issue D8: 50 identical payloads used to produce 50 near-
-            # duplicate rules (only the rule name differed) instead of one.
             continue
         seen_payloads.add(payload)
 
