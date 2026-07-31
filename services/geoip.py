@@ -1,21 +1,4 @@
-"""GeoIP enrichment (cached).
-
-issue E1: this used to run synchronously in a before_request hook on
-every single live request, blocking the attacker's response for up to
-GEOIP_TIMEOUT_SECONDS. It's no longer called from the request path at
-all -- events are captured with a "Pending" placeholder (see
-services/event_logger.py) and monitor_honeypot.py calls enrich_ip() here
-during offline analysis instead, once per unique src_ip rather than once
-per request.
-
-issue E4 note: GEOIP_CACHE below is a plain module-level dict, not safe
-across multiple processes/workers. Now that enrichment only happens
-inside the single, short-lived monitor_honeypot.py analysis process
-(rather than a long-running Flask server), the "grows unbounded over
-uptime" risk this issue originally described mostly goes away as a side
-effect of the E1 fix. It would still need to move to something like Redis
-if this were ever called from multiple concurrent worker processes.
-"""
+"""GeoIP enrichment (cached)."""
 
 import logging
 import time
@@ -64,9 +47,6 @@ def enrich_ip(ip: str) -> dict:
         # Configuration error or JSON parse error - use fallback
         pass
     except Exception as e:
-        # Unexpected error - log it (issue E7: this used to be a bare
-        # print(), which doesn't show up in honeypot.log or respect the
-        # configured log level) and use the fallback.
         logger.warning("Unexpected error in GeoIP enrichment for %s: %s", ip, e)
 
     fallback = {"country": "Unknown", "city": "Unknown", "isp": "Unknown", "asn": "Unknown"}
