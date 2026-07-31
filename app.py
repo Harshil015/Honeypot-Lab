@@ -52,15 +52,6 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     configure_logging(app)
     init_database(app)
     app.teardown_appcontext(close_db_connection)
-
-    # issue E1: GeoIP enrichment used to run here as a before_request hook,
-    # synchronously calling an external API on every single request before
-    # the view function ran - meaning the attacker's response was blocked
-    # for up to GEOIP_TIMEOUT_SECONDS on every hit. Captured events now
-    # carry a "Pending" geoip placeholder (see services/event_logger.py),
-    # and monitor_honeypot.py enriches them offline, once per unique IP,
-    # during analysis (see services/geoip.py).
-
     app.register_blueprint(bait_bp)
     app.register_blueprint(rce_bp)
     app.register_blueprint(login_bp)
@@ -73,5 +64,4 @@ def create_app(config_class: type[Config] = Config) -> Flask:
 app = create_app()
 
 if __name__ == "__main__":
-    # Port aligned with README
     app.run(host="0.0.0.0", port=5000, debug=False)
