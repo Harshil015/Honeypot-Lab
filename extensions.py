@@ -7,10 +7,6 @@ from pathlib import Path
 from typing import Any
 from flask import current_app, g
 
-# 'node_id' tracks which honeypot instance captured an event (multi-node
-# support). 'iocs' and 'ml_anomaly' close issue D2: both were already
-# computed for every event but previously only reached honeypot.log, never
-# the database, because nothing added them to EVENT_COLUMNS.
 EVENT_COLUMNS = (
     "timestamp", "node_id", "event_type", "severity", "src_ip", "user_agent", "payload",
     "path", "method", "country", "city", "isp", "asn",
