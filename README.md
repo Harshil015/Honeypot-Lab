@@ -10,7 +10,7 @@ Over 500 interactions across four attack vectors in the first deployment window:
 
 | Attack vector | MITRE ATT&CK | What was observed |
 |---|---|---|
-| Remote code execution | T1190 | Command injection attempts via exposed eval-style endpoints |
+| Remote code execution | T1059 | Command injection attempts via exposed eval-style endpoints |
 | Brute-force login | T1110 | Credential lists ordered by frequency — methodical, not random |
 | Web shell deployment | T1505.003 | Automated `.php` shell uploads within minutes of service discovery |
 | JNDI injection | T1059 | Log4Shell-style payloads still actively probing |
@@ -42,7 +42,7 @@ honeypot.log         — Raw interaction dataset
 uploads/             — Captured upload attempts
 ```
 
-The analysis pipeline processes structured logs into an interaction timeline by attack type, a payload frequency distribution, and full session replay for kill-chain reconstruction — cutting manual review time by 35% compared to reading raw logs. It also extracts indicators of compromise from captured payloads automatically, generates YARA rules from observed attack patterns, and flags anomalous sessions through a lightweight ML-based detection layer.
+The analysis pipeline processes structured logs into an interaction timeline by attack type, a payload frequency distribution, and full session replay for kill-chain reconstruction — cutting manual review time by 35% compared to reading raw logs. It also extracts indicators of compromise from captured payloads automatically, generates YARA rules from observed attack patterns, and flags anomalous sessions through a lightweight heuristic-based detection layer.
 
 The honeypot can run as a single node or as multiple coordinated instances, with captured events forwarded to a SIEM in real time for alerting rather than relying solely on batch analysis.
 
